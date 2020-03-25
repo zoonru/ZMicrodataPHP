@@ -1,134 +1,17 @@
 <?php
-/**
- * MicrodataPHP
- * http://github.com/linclark/MicrodataPHP
- * Copyright (c) 2011 Lin Clark
- * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
- *
- * Based on MicrodataJS
- * http://gitorious.org/microdatajs/microdatajs
- * Copyright (c) 2009-2011 Philip Jägenstedt
- */
 
-/**
- * Extracts microdata from HTML.
- *
- * Currently supported formats:
- *   - PHP object
- *   - JSON
- */
-class MicrodataPhp {
-  public $dom;
-
-  /**
-   * Constructs a MicrodataPhp object.
-   *
-   * @param $url
-   *   The url of the page to be parsed.
-   */
-  public function __construct($url) {
-    $dom = new MicrodataPhpDOMDocument($url);
-    $dom->registerNodeClass('DOMDocument', 'MicrodataPhpDOMDocument');
-    $dom->registerNodeClass('DOMElement', 'MicrodataPhpDOMElement');
-    $dom->preserveWhiteSpace = false;
-    @$dom->loadHTMLFile($url);
-
-    $this->dom = $dom;
-  }
-
-  /**
-   * Retrieve microdata as a PHP object.
-   *
-   * @return
-   *   An object with an 'items' property, which is an array of top level
-   *   microdata items as objects with the following properties:
-   *   - type: An array of itemtype(s) for the item, if specified.
-   *   - id: The itemid of the item, if specified.
-   *   - properties: An array of itemprops. Each itemprop is keyed by the
-   *     itemprop name and has its own array of values. Values can be strings
-   *     or can be other items, represented as objects.
-   *
-   * @todo MicrodataJS allows callers to pass in a selector for limiting the
-   *   parsing to one section of the document. Consider adding such
-   *   functionality.
-   */
-  public function obj() {
-    $result = new stdClass();
-    $result->items = array();
-    foreach ($this->dom->getItems() as $item) {
-      array_push($result->items, $this->getObject($item, array()));
-    }
-    return $result;
-  }
-
-  /**
-   * Retrieve microdata in JSON format.
-   *
-   * @return
-   *   See obj().
-   *
-   * @todo MicrodataJS allows callers to pass in a function to format the JSON.
-   * Consider adding such functionality.
-   */
-  public function json() {
-    return json_encode($this->obj());
-  }
-
-  /**
-   * Helper function.
-   *
-   * In MicrodataJS, this is handled using a closure. PHP 5.3 allows closures,
-   * but cannot use $this within the closure. PHP 5.4 reintroduces support for
-   * $this. When PHP 5.3/5.4 are more widely supported on shared hosting,
-   * this function could be handled with a closure.
-   */
-  protected function getObject($item, $memory) {
-    $result = new stdClass();
-    $result->properties = array();
-  
-    // Add itemtype.
-    if ($itemtype = $item->itemType()) {
-      $result->type = $itemtype;
-    }
-    // Add itemid. 
-    if ($itemid = $item->itemid()) {
-      $result->id = $itemid;
-    }
-    // Add properties.
-    foreach ($item->properties() as $elem) {
-      if ($elem->itemScope()) {
-        if (in_array($elem, $memory)) {
-          $value = 'ERROR';
-        }
-        else {
-          $memory[] = $item;
-          $value = $this->getObject($elem, $memory);
-          array_pop($memory);
-        }
-      }
-      else {
-        $value = $elem->itemValue();
-      }
-      foreach ($elem->itemProp() as $prop) {
-        $result->properties[$prop][] = $value;
-      }
-    }
-
-    return $result;
-  }
-
-}
+namespace linclark\MicrodataPHP;
 
 /**
  * Extend the DOMElement class with the Microdata API functions.
  */
-class MicrodataPhpDOMElement extends DOMElement {
+class MicrodataPhpDOMElement extends \DOMElement {
 
   /**
    * Determine whether the itemscope attribute is present on this element.
    *
-   * @return
-   *   boolean TRUE if this is an item, FALSE if it is not.
+   * @return bool
+   *   TRUE if this is an item, FALSE if it is not.
    */
   public function itemScope() {
     return $this->hasAttribute('itemscope');
@@ -137,7 +20,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve this item's itemtypes.
    *
-   * @return
+   * @return array
    *   An array of itemtype tokens.
    */
   public function itemType() {
@@ -153,7 +36,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve this item's itemid.
    *
-   * @return
+   * @return string
    *   A string with the itemid.
    */
   public function itemId() {
@@ -169,7 +52,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve this item's itemprops.
    *
-   * @return
+   * @return array
    *   An array of itemprop tokens.
    */
   public function itemProp() {
@@ -183,7 +66,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve the ids of other items which this item references.
    *
-   * @return
+   * @return array
    *   An array of ids as contained in the itemref attribute.
    */
   public function itemRef() {
@@ -197,7 +80,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve the properties
    *
-   * @return
+   * @return array
    *   An array of MicrodataPhpDOMElements which are properties of this
    *   element.
    */
@@ -224,7 +107,7 @@ class MicrodataPhpDOMElement extends DOMElement {
   /**
    * Retrieve the element's value, determined by the element type.
    *
-   * @return
+   * @return string
    *   The string value if the element is not an item, or $this if it is
    *   an item.
    */
@@ -262,7 +145,11 @@ class MicrodataPhpDOMElement extends DOMElement {
         if (!empty($datetime))
           return $datetime;
       default:
-        return $this->textContent;
+        if ($this->getAttribute('content')) {
+          return $this->getAttribute('content');
+        } else {
+          return $this->textContent;
+        }
     }
   }
 
@@ -276,12 +163,12 @@ class MicrodataPhpDOMElement extends DOMElement {
    *   An array of tokens.
    */
   protected function tokenList($string) {
-    return explode(' ', trim($string));
+    return preg_split('/\s+/', trim($string));
   }
 
   /**
    * Traverse the tree.
-   * 
+   *
    * In MicrodataJS, this is handled using a closure.
    * See comment for MicrodataPhp:getObject() for an explanation of closure use
    * in this library.
@@ -314,33 +201,3 @@ class MicrodataPhpDOMElement extends DOMElement {
   }
 
 }
-
-/**
- * Extend the DOMDocument class with the Microdata API functions.
- */
-class MicrodataPhpDOMDocument extends DOMDocument {
-  /**
-   * Retrieves a list of microdata items.
-   *
-   * @return
-   *   A DOMNodeList containing all top level microdata items.
-   *
-   * @todo Allow restriction by type string.
-   */
-  public function getItems() {
-    // Return top level items.
-    return $this->xpath()->query('//*[@itemscope and not(@itemprop)]');
-  }
-
-  /**
-   * Creates a DOMXPath to query this document.
-   *
-   * @return
-   *   DOMXPath object.
-   */
-  public function xpath() {
-    return new DOMXPath($this);
-  }
-}
-
-?>
