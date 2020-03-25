@@ -1,5 +1,9 @@
-MicrodataPHP [![Build Status](https://travis-ci.org/linclark/MicrodataPHP.svg?branch=2.0.x)](https://travis-ci.org/linclark/MicrodataPHP)
+ZMicrodataPHP (forked)
 ============
+
+```
+composer require zoon
+```
 
 Microdata is a syntax for embedding machine-readable metadata in HTML.
 
@@ -11,7 +15,7 @@ Example use:
 ```
 require 'vendor/autoload.php';
 
-use linclark\MicrodataPHP\MicrodataPhp;
+use Zoon\ZMicrodataPHP\MicrodataPhp;
 
 $url = 'http://example.com';
 $md = new MicrodataPhp($url);

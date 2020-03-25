@@ -1,6 +1,6 @@
 <?php
 
-namespace linclark\MicrodataPHP;
+namespace Zoon\ZMicrodataPHP;
 
 /**
  * Extend the DOMDocument class with the Microdata API functions.
