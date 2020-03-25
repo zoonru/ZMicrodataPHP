@@ -1,14 +1,11 @@
 {
-  "name": "linclark/microdata-php",
+  "name": "zoonru/z-microdata-php",
   "description": "Extracts microdata from HTML using PHP.",
   "autoload": {
     "psr-4": {
-      "linclark\\MicrodataPHP\\": ["src/", "tests/src/"]
+      "Zoon\\ZMicrodataPHP\\": "src/"
     }
   },
   "license": "MIT",
-  "minimum-stability": "dev",
-  "require-dev": {
-    "phpunit/phpunit": "4.1.x-dev"
-  }
+  "minimum-stability": "dev"
 }
