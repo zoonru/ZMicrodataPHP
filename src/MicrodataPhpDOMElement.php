@@ -148,7 +148,11 @@ class MicrodataPhpDOMElement extends \DOMElement {
         if ($this->getAttribute('content')) {
           return $this->getAttribute('content');
         } else {
-          return $this->textContent;
+          $text = '';
+          foreach ($this->childNodes as $node) {
+		  	$text .= $node->textContent . ' ';
+		  }
+          return trim($text);
         }
     }
   }
