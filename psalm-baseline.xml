@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.26.0@6998fabb2bf528b65777bf9941920888d23c03ac">
+  <file src="src/MicrodataPhp.php">
+    <MissingParamType occurrences="2">
+      <code>$item</code>
+      <code>$memory</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$dom</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="1">
+      <code>getObject</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="3">
+      <code>$config['html']</code>
+      <code>$config['url']</code>
+      <code>$memory</code>
+    </MixedArgument>
+    <MixedArrayAssignment occurrences="1">
+      <code>$memory[]</code>
+    </MixedArrayAssignment>
+    <MixedArrayOffset occurrences="1">
+      <code>$result-&gt;properties[$prop]</code>
+    </MixedArrayOffset>
+    <MixedAssignment occurrences="9">
+      <code>$elem</code>
+      <code>$item</code>
+      <code>$itemid</code>
+      <code>$itemtype</code>
+      <code>$memory[]</code>
+      <code>$memory_item</code>
+      <code>$prop</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="7">
+      <code>getItems</code>
+      <code>itemProp</code>
+      <code>itemScope</code>
+      <code>itemType</code>
+      <code>itemValue</code>
+      <code>itemid</code>
+      <code>properties</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/MicrodataPhpDOMDocument.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$this-&gt;xpath</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>DOMXPath</code>
+    </InvalidReturnType>
+    <MissingConstructor occurrences="1">
+      <code>$xpath</code>
+    </MissingConstructor>
+    <MixedInferredReturnType occurrences="1">
+      <code>DOMNodeList</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$this-&gt;xpath()-&gt;query('//*[@itemscope and not(@itemprop)]')</code>
+    </MixedReturnStatement>
+    <RedundantPropertyInitializationCheck occurrences="1">
+      <code>isset($this-&gt;xpath)</code>
+    </RedundantPropertyInitializationCheck>
+    <UndefinedDocblockClass occurrences="3">
+      <code>$this-&gt;xpath()</code>
+      <code>DOMNodeList</code>
+      <code>DOMXPath</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/MicrodataPhpDOMElement.php">
+    <InvalidNullableReturnType occurrences="2">
+      <code>array</code>
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement occurrences="1">
+      <code>$this</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="4">
+      <code>$node</code>
+      <code>$props</code>
+      <code>$root</code>
+      <code>$toTraverse</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>traverse</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="2">
+      <code>$names</code>
+      <code>$toTraverse</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="2">
+      <code>$toTraverse[$i]</code>
+      <code>$toTraverse[0]</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="1">
+      <code>$props[]</code>
+    </MixedArrayAssignment>
+    <MixedArrayOffset occurrences="1">
+      <code>$toTraverse[$i]</code>
+    </MixedArrayOffset>
+    <MixedAssignment occurrences="9">
+      <code>$child</code>
+      <code>$child</code>
+      <code>$children</code>
+      <code>$children</code>
+      <code>$elem</code>
+      <code>$i</code>
+      <code>$itemref</code>
+      <code>$names</code>
+      <code>$props[]</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="7">
+      <code>getNodePath</code>
+      <code>isSameNode</code>
+      <code>isSameNode</code>
+      <code>itemProp</code>
+      <code>itemScope</code>
+      <code>query</code>
+      <code>query</code>
+    </MixedMethodCall>
+    <MixedOperand occurrences="2">
+      <code>$itemref</code>
+      <code>$node-&gt;getNodePath()</code>
+    </MixedOperand>
+    <MixedReturnStatement occurrences="1">
+      <code>$props</code>
+    </MixedReturnStatement>
+    <NullableReturnStatement occurrences="3">
+      <code>NULL</code>
+      <code>NULL</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <PossiblyNullReference occurrences="2">
+      <code>xpath</code>
+      <code>xpath</code>
+    </PossiblyNullReference>
+    <UndefinedMethod occurrences="2">
+      <code>xpath</code>
+      <code>xpath</code>
+    </UndefinedMethod>
+  </file>
+</files>
