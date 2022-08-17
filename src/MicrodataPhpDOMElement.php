@@ -2,10 +2,12 @@
 
 namespace Zoon\ZMicrodataPHP;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Extend the DOMElement class with the Microdata API functions.
  */
-class MicrodataPhpDOMElement extends \DOMElement {
+final class MicrodataPhpDOMElement extends \DOMElement {
 
 	/**
 	 * Determine whether the itemscope attribute is present on this element.
@@ -13,7 +15,7 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	 * @return bool
 	 *   TRUE if this is an item, FALSE if it is not.
 	 */
-	public function itemScope() {
+	public function itemScope(): bool {
 		return $this->hasAttribute('itemscope');
 	}
 
@@ -52,15 +54,14 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	/**
 	 * Retrieve this item's itemprops.
 	 *
-	 * @return array
-	 *   An array of itemprop tokens.
+	 * @return list<string>
 	 */
-	public function itemProp() {
+	public function itemProp(): array {
 		$itemprop = $this->getAttribute('itemprop');
 		if (!empty($itemprop)) {
 			return $this->tokenList($itemprop);
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -80,12 +81,12 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	/**
 	 * Retrieve the properties
 	 *
-	 * @return array
+	 * @return list<MicrodataPhpDOMElement>
 	 *   An array of MicrodataPhpDOMElements which are properties of this
 	 *   element.
 	 */
-	public function properties() {
-		$props = array();
+	public function properties(): array {
+		$props = [];
 
 		if ($this->itemScope()) {
 			$toTraverse = array($this);
@@ -107,11 +108,11 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	/**
 	 * Retrieve the element's value, determined by the element type.
 	 *
-	 * @return string
+	 * @return string|self|null
 	 *   The string value if the element is not an item, or $this if it is
 	 *   an item.
 	 */
-	public function itemValue() {
+	public function itemValue(): string|self|null {
 		$itemprop = $this->itemProp();
 		if (empty($itemprop))
 			return null;
@@ -163,10 +164,10 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	 * @param string $string
 	 *   A space-separated list of tokens.
 	 *
-	 * @return array
+	 * @return list<string>
 	 *   An array of tokens.
 	 */
-	protected function tokenList($string) {
+	protected function tokenList($string): array {
 		return preg_split('/\s+/', trim($string));
 	}
 
@@ -176,14 +177,16 @@ class MicrodataPhpDOMElement extends \DOMElement {
 	 * In MicrodataJS, this is handled using a closure.
 	 * See comment for MicrodataPhp:getObject() for an explanation of closure use
 	 * in this library.
+	 * @param list<MicrodataPhpDOMElement> $props
 	 */
-	protected function traverse($node, &$toTraverse, &$props, $root) {
+	protected function traverse($node, &$toTraverse, array &$props, $root) {
 		foreach ($toTraverse as $i => $elem)  {
 			if ($elem->isSameNode($node)){
 				unset($toTraverse[$i]);
 			}
 		}
 		if (!$root->isSameNode($node)) {
+			Assert::isInstanceOf($node, MicrodataPhpDOMElement::class);
 			$names = $node->itemProp();
 			if (count($names)) {
 				//@todo Add support for property name filtering.
@@ -202,6 +205,19 @@ class MicrodataPhpDOMElement extends \DOMElement {
 				$this->traverse($child, $toTraverse, $props, $root);
 			}
 		}
+	}
+
+	public function hasRoot(): bool {
+		$parentNode = $this->parentNode;
+		while ($parentNode !== null && !($parentNode instanceof MicrodataPhpDOMDocument)) {
+			Assert::isInstanceOf($parentNode, MicrodataPhpDOMElement::class);
+			if ($parentNode->itemScope() && $parentNode->itemProp() === []) {
+				return true;
+			} else {
+				$parentNode = $parentNode->parentNode;
+			}
+		}
+		return false;
 	}
 
 }

@@ -19,8 +19,9 @@ namespace Zoon\ZMicrodataPHP;
  *   - PHP object
  *   - JSON
  */
-class MicrodataPhp {
-	public $dom;
+final class MicrodataPhp {
+
+	public readonly MicrodataPhpDOMDocument $dom;
 
 	/**
 	 * Constructs a MicrodataPhp object.
@@ -61,7 +62,7 @@ class MicrodataPhp {
 	/**
 	 * Retrieve microdata as a PHP object.
 	 *
-	 * @return object
+	 * @return MicrodataPhpResult
 	 *   An object with an 'items' property, which is an array of top level
 	 *   microdata items as objects with the following properties:
 	 *   - type: An array of itemtype(s) for the item, if specified.
@@ -74,13 +75,23 @@ class MicrodataPhp {
 	 *   parsing to one section of the document. Consider adding such
 	 *   functionality.
 	 */
-	public function obj() {
-		$result = new \stdClass();
-		$result->items = array();
-		foreach ($this->dom->getItems() as $item) {
-			array_push($result->items, $this->getObject($item, array()));
+	public function obj(): MicrodataPhpResult {
+		return $this->getObjects($this->dom->getItems());
+	}
+
+	public function getAllObjects(): MicrodataPhpResult {
+		return $this->getObjects($this->dom->getAllItems());
+	}
+
+	/**
+	 * @param list<MicrodataPhpDOMElement> $elements
+	 */
+	private function getObjects(array $elements): MicrodataPhpResult {
+		$items = [];
+		foreach ($elements as $element) {
+			$items[] = $this->getObject($element, []);
 		}
-		return $result;
+		return new MicrodataPhpResult($items);
 	}
 
 	/**
@@ -104,19 +115,8 @@ class MicrodataPhp {
 	 * $this. When PHP 5.3/5.4 are more widely supported on shared hosting,
 	 * this function could be handled with a closure.
 	 */
-	protected function getObject($item, $memory) {
-		$result = new \stdClass();
-		$result->properties = array();
-
-		// Add itemtype.
-		if ($itemtype = $item->itemType()) {
-			$result->type = $itemtype;
-		}
-		// Add itemid.
-		if ($itemid = $item->itemid()) {
-			$result->id = $itemid;
-		}
-		// Add properties.
+	protected function getObject(MicrodataPhpDOMElement $item, $memory): MicrodataPhpResultObject {
+		$properties = [];
 		foreach ($item->properties() as $elem) {
 			if ($elem->itemScope()) {
 				// Cannot use in_array() for comparison when values are arrays, so
@@ -133,17 +133,16 @@ class MicrodataPhp {
 					$value = $this->getObject($elem, $memory);
 					array_pop($memory);
 				}
-			}
-			else {
+			} else {
 				$value = $elem->itemValue();
 			}
 			foreach ($elem->itemProp() as $prop) {
-				$result->properties[$prop][] = $value;
+				$properties[$prop][] = $value;
 			}
 
-			$value = NULL;
+			$value = null;
 		}
-		return $result;
+		return new MicrodataPhpResultObject($properties, $item->itemType(), $item->itemId());
 	}
 
 }

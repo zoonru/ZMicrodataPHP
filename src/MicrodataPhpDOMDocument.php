@@ -2,24 +2,47 @@
 
 namespace Zoon\ZMicrodataPHP;
 
+use DOMXPath;
+use Webmozart\Assert\Assert;
+
 /**
  * Extend the DOMDocument class with the Microdata API functions.
  */
-class MicrodataPhpDOMDocument extends \DOMDocument {
+final class MicrodataPhpDOMDocument extends \DOMDocument {
 	/** @var \DOMXPath $xpath */
 	protected $xpath;
 
 	/**
 	 * Retrieves a list of microdata items.
 	 *
-	 * @return DOMNodeList
+	 * @return list<MicrodataPhpDOMElement>
 	 *   A DOMNodeList containing all top level microdata items.
 	 *
 	 * @todo Allow restriction by type string.
 	 */
 	public function getItems() {
-		// Return top level items.
-		return $this->xpath()->query('//*[@itemscope and not(@itemprop)]');
+		$result = [];
+		foreach ($this->xpath()->query('//*[@itemscope and not(@itemprop)]') as $item) {
+			Assert::isInstanceOf($item, MicrodataPhpDOMElement::class);
+			$result[] = $item;
+		}
+		return $result;
+	}
+
+	/**
+	 * @return list<MicrodataPhpDOMElement>
+	 */
+	public function getAllItems(): array {
+		$result = [];
+		foreach ($this->xpath()->query('//*[@itemscope]') as $item) {
+			Assert::isInstanceOf($item, MicrodataPhpDOMElement::class);
+			if ($item->itemProp() === []) {
+				$result[] = $item;
+			} elseif (!$item->hasRoot()) {
+				$result[] = $item;
+			}
+		}
+		return $result;
 	}
 
 	/**
