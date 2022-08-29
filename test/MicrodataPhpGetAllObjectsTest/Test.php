@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Zoon\ZMicrodataPHP\Test\MicrodataPhpGetAllObjectsTest;
+namespace Zoon\MicrodataPHP\Test\MicrodataPhpGetAllObjectsTest;
 
 use PHPUnit\Framework\TestCase;
-use Zoon\ZMicrodataPHP\MicrodataPhp;
+use Zoon\MicrodataPHP\MicrodataPhp;
 
 final class Test extends TestCase {
 
