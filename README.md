@@ -1,8 +1,8 @@
-ZMicrodataPHP (forked)
+MicrodataPHP (forked)
 ============
 
 ```
-composer require zoonru/z-microdata-php
+composer require zoonru/microdata-php
 ```
 
 Microdata is a syntax for embedding machine-readable metadata in HTML.
