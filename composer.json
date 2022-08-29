@@ -1,10 +1,25 @@
 {
   "name": "zoonru/z-microdata-php",
   "description": "Extracts microdata from HTML using PHP.",
+  "require": {
+    "php": "^8.1",
+    "ext-dom": "*",
+    "webmozart/assert": "^1.11"
+  },
   "autoload": {
     "psr-4": {
       "Zoon\\ZMicrodataPHP\\": "src/"
     }
   },
-  "license": "MIT"
+  "autoload-dev": {
+    "psr-4": {
+      "Zoon\\ZMicrodataPHP\\Test\\": "test/"
+    }
+  },
+  "license": "MIT",
+  "require-dev": {
+    "vimeo/psalm": "^4.26",
+    "phpunit/phpunit": "^9.5",
+    "psalm/plugin-phpunit": "^0.17.0"
+  }
 }
