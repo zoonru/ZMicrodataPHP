@@ -1,6 +1,6 @@
 <?php
 
-namespace Zoon\ZMicrodataPHP;
+namespace Zoon\MicrodataPHP;
 
 use Webmozart\Assert\Assert;
 
