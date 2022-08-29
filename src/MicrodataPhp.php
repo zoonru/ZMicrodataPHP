@@ -10,7 +10,7 @@
  * Copyright (c) 2009-2011 Philip Jägenstedt
  */
 
-namespace Zoon\ZMicrodataPHP;
+namespace Zoon\MicrodataPHP;
 
 /**
  * Extracts microdata from HTML.
