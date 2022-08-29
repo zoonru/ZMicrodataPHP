@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zoon\ZMicrodataPHP;
+namespace Zoon\MicrodataPHP;
 
 final class MicrodataPhpResult {
 
