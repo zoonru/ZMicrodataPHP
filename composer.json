@@ -1,5 +1,5 @@
 {
-  "name": "zoonru/microdata-php",
+  "name": "zoon/microdata-php",
   "description": "Extracts microdata from HTML using PHP.",
   "require": {
     "php": "^8.1",

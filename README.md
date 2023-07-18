@@ -2,7 +2,7 @@ MicrodataPHP (forked)
 ============
 
 ```
-composer require zoonru/microdata-php
+composer require zoon/microdata-php
 ```
 
 Microdata is a syntax for embedding machine-readable metadata in HTML.
@@ -15,7 +15,7 @@ Example use:
 ```
 require 'vendor/autoload.php';
 
-use Zoon\ZMicrodataPHP\MicrodataPhp;
+use Zoon\MicrodataPHP\MicrodataPhp;
 
 $url = 'http://example.com';
 $md = new MicrodataPhp($url);
